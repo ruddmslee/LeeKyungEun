@@ -12,8 +12,8 @@ class CommentInline(admin.TabularInline):
 @admin.register(Post)
 class PostModelAdmin(admin.ModelAdmin):
     list_display = ['id', 'content', 'created_at', 'view_count']
-    search_fields = ['id']
-    search_help_text = '게시글 번호 검색이 가능합니다.'
+    search_fields = ['id', 'content']
+    search_help_text = '게시글 번호나 내용으로 검색이 가능합니다.'
     list_editable = ['content', 'view_count']
     list_filter = ['created_at']
     inlines = [CommentInline]
