@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
+from django.views import View
+from django.views.generic import ListView
+from .models import Post
 
 # Create your views here.
 def url_view(request):
@@ -17,5 +20,29 @@ def function_view(request):
     print(f'request.method: {request.method}')
     print(f'request.GET: {request.GET}')
     print(f'request.POST: {request.POST}')
+
+    context = {
+            "view_type": "Function Based View",
+        }
+    return render(request,'view.html', context)
+
+class class_view(View):
+
+    template_name = 'view.html' 
+    context = {
+            "view_type": "Class Based View",
+        }
+
+    def get(self, request):
+        print(f'request.method: {request.method}')
+        print(f'request.GET: {request.GET}')
+        return render(request,self.template_name, self.context)
+
+    def post(self, request):
+        print(f'request.method: {request.method}')
+        print(f'request.POST: {request.POST}')
+        return render(request,self.template_name, self.context)
     
-    return render(request,'view.html')
+class class_view2(ListView):
+    model = Post
+    template_name = 'cbv_view.html'
