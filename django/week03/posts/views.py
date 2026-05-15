@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.views import View
 from django.views.generic import ListView
@@ -13,16 +13,11 @@ def post_model_form_view(request):
     else:
         form = PostModelForm(request.POST, request.FILES)
         if form.is_valid():
-            Post.objects.create(
-                image = form.cleaned_data['image'],
-                content = form.cleaned_data['content'],
-                writer = request.user,
-                view_count = form.cleaned_data['view_count']
-            )
+            form.save()
         else:
             print(form.errors)
             return render(request, 'post_model_form.html', {'form' : form})
-        return render('posts:post-list')
+        return redirect('posts:post-list')
 
 def post_form_view(request):
     if request.method == "GET":
@@ -45,6 +40,35 @@ def post_list_view(request):
     posts = Post.objects.all()
     context = {'posts' : posts}
     return render(request, 'post_list.html', context)
+
+def post_detail_view(request, id):
+    post = Post.objects.get(id=id)
+    context = {'post': post}
+    return render(request, 'post_detail.html', context)
+
+def post_update_view(request, id):
+    post = Post.objects.get(id=id)    
+    if request.method == "GET":
+        form = PostModelForm(instance=post)
+        context = {'form' : form, 'post': post}
+        return render(request, 'post_update.html', context)
+    else:
+        form = PostModelForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+        else:
+            print(form.errors)
+            return render(request, 'post_update.html', {'form' : form})
+        return redirect('posts:post-detail', id=id)
+    
+def post_delete_view(request, id):
+    post = get_object_or_404(Post, id=id)
+    if request.method == "POST":
+        post.delete()
+        return redirect('posts:post-list')
+    context = {'post' : post}
+    return render(request, 'post_delete_confirm.html', context)
+    
 
 # Create your views here.
 def url_view(request):

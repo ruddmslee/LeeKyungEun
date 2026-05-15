@@ -6,7 +6,6 @@
     action="{% url 'posts:post-model-form' %}"
     method="POST"
     enctype="multipart/form-data"
-    novalidate
 >
     {% csrf_token %}
     <div>{{form.as_p}}</div>
