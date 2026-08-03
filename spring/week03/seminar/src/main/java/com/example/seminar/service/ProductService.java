@@ -1,6 +1,6 @@
 package com.example.seminar.service;
 
-import com.example.seminar.model.Product;
+import com.example.seminar.dto.Product;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,8 +11,9 @@ public class ProductService {
 
     private List<Product> products = new ArrayList<>();
 
-    public void addProduct(Product p) {
-        products.add(p);
+    public Product addProduct(Product product) {
+        products.add(product);
+        return product;
     }
 
     public List<Product> findAll() {
